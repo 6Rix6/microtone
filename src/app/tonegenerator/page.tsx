@@ -6,6 +6,7 @@ import Link from 'next/link';
 export default function HomePage() {
     const [freqInput, setFreqInput] = useState<string>('440,660,880');
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [wave,setWave] = useState<"sine"|"square"|"sawtooth"|"triangle">("sine");
     const audioCtxRef = useRef<AudioContext | null>(null);
     const oscillatorsRef = useRef<OscillatorNode[]>([]);
     const gainNodeRef = useRef<GainNode | null>(null);
@@ -45,7 +46,7 @@ export default function HomePage() {
 
         freqs.forEach((freq) => {
             const osc = audioCtxRef.current!.createOscillator();
-            osc.type = 'sine';
+            osc.type = wave;                    
             osc.frequency.setValueAtTime(freq, audioCtxRef.current!.currentTime);
             osc.connect(gainNode);
             osc.start();
@@ -78,14 +79,41 @@ export default function HomePage() {
             </Link>
             <div className={"flex-col items-center justify-center m-auto"}>
                 <div className="bg-white p-8 rounded-2xl shadow-lg text-center w-full max-w-md">
-                    <h1 className="text-2xl font-bold mb-6">トーンジェネレーター</h1>
-                    <label className="block mb-4 text-left text-gray-700">
-                        周波数をカンマ区切りで入力（例: 440,660,880）:
+                    <h1 className="text-2xl font-bold mb-3">トーンジェネレーター</h1>
+                    <div className='text-lg'>波形を選択</div>
+                    <div className='flex justify-center mb-6 p-2'>
+                        <button 
+                            className={`p-1 mr-1 ml-1 shadow-md rounded-md hover:bg-gray-200 ${wave=="sine"?"bg-gray-200":"bg-white"}`}
+                            onClick={()=>setWave("sine")}
+                            >
+                                sine
+                        </button>
+                        <button 
+                            className={`p-1 mr-1 ml-1 shadow-md rounded-md hover:bg-gray-200 ${wave=="square"?"bg-gray-200":"bg-white"}`}
+                            onClick={()=>setWave("square")}
+                            >
+                                square
+                        </button>                        
+                        <button 
+                            className={`p-1 mr-1 ml-1 shadow-md rounded-md hover:bg-gray-200 ${wave=="sawtooth"?"bg-gray-200":"bg-white"}`}
+                            onClick={()=>setWave("sawtooth")}
+                            >
+                                sawtooth
+                        </button>                        
+                        <button 
+                            className={`p-1 mr-1 ml-1 shadow-md rounded-md hover:bg-gray-200 ${wave=="triangle"?"bg-gray-200":"bg-white"}`}
+                            onClick={()=>setWave("triangle")}
+                            >
+                                triangle
+                        </button>
+                    </div>
+                    <label className="block mb-4 text-gray-700 text-center">
+                        周波数をカンマ区切りで入力（例: 440,660,880）
                         <input
                             type="text"
                             value={freqInput}
                             onChange={(e) => setFreqInput(e.target.value)}
-                            className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="mt-1 w-full rounded-md border-gray-300 shadow-sm  focus:border-blue-500 focus:ring-blue-500"
                         />
                     </label>
                     <div className="flex justify-center gap-4 mt-6">
