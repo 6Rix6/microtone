@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 /* eslint-disable */
 export default function HomePage() {
@@ -80,6 +81,9 @@ export default function HomePage() {
             <div className={"mt-2"}>
                 <div className="bg-white p-6 rounded-2xl shadow-lg text-center w-full h-full">
                     <h1 className={"text-2xl font-bold mb-6"}>微分音・和音作成</h1>
+                    <div>
+                        <Image src={"/toneChart/png-bright/2d-score.png"} alt='2d-score' width={1920} height={1080}></Image>
+                    </div>
                 </div>
             </div>
         </main>
