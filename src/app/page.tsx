@@ -7,6 +7,7 @@ export default function HomePage() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const oscillatorsRef = useRef<OscillatorNode[]>([]);
+  const gainNodeRef = useRef<GainNode | null>(null);
 
   const parseFrequencies = (input: string): number[] => {
     return input
@@ -23,13 +24,29 @@ export default function HomePage() {
     }
 
     const freqs = parseFrequencies(freqInput);
+    if (freqs.length === 0) return;
+
+    const audioCtx = audioCtxRef.current;
+
+    if(gainNodeRef.current) {
+      gainNodeRef.current.disconnect();
+      gainNodeRef.current = null;
+    }
+
+    const gainNode = audioCtx?.createGain();
+    if (gainNode) {
+      gainNode.gain.value = 1 / freqs.length; //音量を音の数で割る
+      gainNode.connect(audioCtx?.destination);
+      gainNodeRef.current = gainNode;
+    }
+
     const newOscillators: OscillatorNode[] = [];
 
     freqs.forEach((freq) => {
       const osc = audioCtxRef.current!.createOscillator();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, audioCtxRef.current!.currentTime);
-      osc.connect(audioCtxRef.current!.destination);
+      osc.connect(gainNode);
       osc.start();
       newOscillators.push(osc);
     });
@@ -46,6 +63,11 @@ export default function HomePage() {
       osc.disconnect();
     });
     oscillatorsRef.current = [];
+
+    if (gainNodeRef.current) {
+      gainNodeRef.current.disconnect();
+      gainNodeRef.current = null;
+    }
   };
 
   return (
