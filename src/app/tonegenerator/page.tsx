@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import Link from 'next/link';
+import DropdownMenu from '@/components/DropdownMenu.tsx'
 
 export default function HomePage() {
     const [freqInput, setFreqInput] = useState<string>('440,660,880');
@@ -82,7 +83,7 @@ export default function HomePage() {
                     <h1 className="text-2xl font-bold mb-3">トーンジェネレーター</h1>
                     <div className='text-lg'>波形を選択</div>
                     <div className='flex justify-center mb-6 p-2'>
-                        <button 
+ {/*                       <button 
                             className={`p-1 mr-1 ml-1 shadow-md rounded-md hover:bg-gray-200 ${wave=="sine"?"bg-gray-200":"bg-white"}`}
                             onClick={()=>setWave("sine")}
                             >
@@ -105,7 +106,8 @@ export default function HomePage() {
                             onClick={()=>setWave("triangle")}
                             >
                                 triangle
-                        </button>
+                        </button>*/}
+                        <DropdownMenu  items={["sine","square","sawtooth","triangle"]} onChange={setWave}/>
                     </div>
                     <label className="block mb-4 text-gray-700 text-center">
                         周波数をカンマ区切りで入力（例: 440,660,880）
